@@ -7,7 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nes_ui/nes_ui.dart';
 
 class TotalScoreButton extends StatelessWidget {
-  const TotalScoreButton({super.key});
+  const TotalScoreButton({required this.active, super.key});
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -17,38 +18,40 @@ class TotalScoreButton extends StatelessWidget {
         return NesButton.text(
           text: 'score: $state',
           type: NesButtonType.normal,
-          onPressed: () => showGameMessage<void>(
-            context: context,
-            message: [
-              const TextSpan(text: 'Your '),
-              TextSpan(
-                text: 'total score',
-                style: context.emphasis,
-              ),
-              const TextSpan(
-                text: ' is total amount of ',
-              ),
-              TextSpan(text: 'points', style: context.emphasis),
-              const TextSpan(
-                text: ' you have gained over the course of '
-                    'the game.',
-              ),
-            ],
-            child: const Column(
-              children: [
-                NesContainer(
-                  child: Column(
-                    children: [
-                      Text('score:'),
-                      ScoreText(),
+          onPressed: !active
+              ? null
+              : () => showGameMessage<void>(
+                    context: context,
+                    message: [
+                      const TextSpan(text: 'Your '),
+                      TextSpan(
+                        text: 'total score',
+                        style: context.emphasis,
+                      ),
+                      const TextSpan(
+                        text: ' is total amount of ',
+                      ),
+                      TextSpan(text: 'points', style: context.emphasis),
+                      const TextSpan(
+                        text: ' you have gained over the course of '
+                            'the game.',
+                      ),
                     ],
+                    child: const Column(
+                      children: [
+                        NesContainer(
+                          child: Column(
+                            children: [
+                              Text('score:'),
+                              ScoreText(),
+                            ],
+                          ),
+                        ),
+                        square8,
+                        ClickButton(),
+                      ],
+                    ),
                   ),
-                ),
-                square8,
-                ClickButton(),
-              ],
-            ),
-          ),
         );
       },
     );
@@ -80,7 +83,9 @@ class TotalScoreButtonEnabled extends StatelessWidget {
         return AnimatedOpacity(
           duration: Durations.medium1,
           opacity: state ? 1 : 0,
-          child: state ? const TotalScoreButton() : const SizedBox.shrink(),
+          child: state
+              ? const TotalScoreButton(active: true)
+              : const SizedBox.shrink(),
         );
       },
     );

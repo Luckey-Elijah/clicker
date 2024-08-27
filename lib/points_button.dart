@@ -7,7 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nes_ui/nes_ui.dart';
 
 class PointsButton extends StatelessWidget {
-  const PointsButton({super.key});
+  const PointsButton({
+    required this.active,
+    super.key,
+  });
+
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -17,32 +22,34 @@ class PointsButton extends StatelessWidget {
         return NesButton.text(
           text: 'points: $state',
           type: NesButtonType.normal,
-          onPressed: () => showGameMessage<void>(
-            context: context,
-            message: [
-              const TextSpan(text: 'Your '),
-              TextSpan(text: 'points', style: context.emphasis),
-              const TextSpan(text: ' are available values to '),
-              TextSpan(text: 'spend', style: context.emphasis),
-              const TextSpan(text: ' on '),
-              TextSpan(text: 'upgrades', style: context.emphasis),
-              const TextSpan(text: '.'),
-            ],
-            child: const Column(
-              children: [
-                NesContainer(
-                  child: Column(
-                    children: [
-                      Text('points:'),
-                      PointsText(),
+          onPressed: !active
+              ? null
+              : () => showGameMessage<void>(
+                    context: context,
+                    message: [
+                      const TextSpan(text: 'Your '),
+                      TextSpan(text: 'points', style: context.emphasis),
+                      const TextSpan(text: ' are available values to '),
+                      TextSpan(text: 'spend', style: context.emphasis),
+                      const TextSpan(text: ' on '),
+                      TextSpan(text: 'upgrades', style: context.emphasis),
+                      const TextSpan(text: '.'),
                     ],
+                    child: const Column(
+                      children: [
+                        NesContainer(
+                          child: Column(
+                            children: [
+                              Text('points:'),
+                              PointsText(),
+                            ],
+                          ),
+                        ),
+                        square8,
+                        ClickButton(),
+                      ],
+                    ),
                   ),
-                ),
-                square8,
-                ClickButton(),
-              ],
-            ),
-          ),
         );
       },
     );

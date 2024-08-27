@@ -6,7 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nes_ui/nes_ui.dart';
 
 class BuyPassiveButton extends StatelessWidget {
-  const BuyPassiveButton({super.key});
+  const BuyPassiveButton({
+    required this.active,
+    super.key,
+  });
+
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class BuyPassiveButton extends StatelessWidget {
         return NesButton.text(
           text: 'buy passive: ${state.$2}',
           type: NesButtonType.primary,
-          onPressed: state.$1
+          onPressed: state.$1 && active
               ? () => context.read<ClickerBloc>().add(BuyPassiveEvent(state.$2))
               : null,
         );
@@ -26,7 +31,12 @@ class BuyPassiveButton extends StatelessWidget {
 }
 
 class PassivesCounterButton extends StatelessWidget {
-  const PassivesCounterButton({super.key});
+  const PassivesCounterButton({
+    required this.active,
+    super.key,
+  });
+
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +56,9 @@ class PassivesCounterButton extends StatelessWidget {
                 TextSpan(text: '1 point', style: context.emphasis),
                 const TextSpan(text: ' per passive per second.'),
               ],
-              child: const Column(
+              child: Column(
                 children: [
-                  NesContainer(
+                  const NesContainer(
                     child: Column(
                       children: [
                         Text('passives:'),
@@ -57,7 +67,7 @@ class PassivesCounterButton extends StatelessWidget {
                     ),
                   ),
                   square8,
-                  BuyPassiveButton(),
+                  BuyPassiveButton(active: active),
                 ],
               ),
             );

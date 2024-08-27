@@ -62,14 +62,15 @@ class _Unlocks extends StatelessWidget {
     return BlocSelector<ClickerBloc, ClickerState, List<UnlockStage>>(
       selector: (state) => state.unlocks,
       builder: (context, state) {
+        final active = state.contains(UnlockStage.points);
         return ListView(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           children: [
+            _PointsAndTotal(active: active),
             for (final unlock in state) ...[
-              if (unlock == UnlockStage.points) const _PointsAndTotal(),
               if (unlock == UnlockStage.passive) ...[
                 square8,
-                const _Passives(),
+                _Passives(active: active),
               ],
               if (unlock == UnlockStage.messages) ...[],
             ],
@@ -81,27 +82,29 @@ class _Unlocks extends StatelessWidget {
 }
 
 class _Passives extends StatelessWidget {
-  const _Passives({super.key});
+  const _Passives({required this.active});
+
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 480) {
-          return const Row(
+          return Row(
             children: [
-              Expanded(child: BuyPassiveButton()),
+              Expanded(child: BuyPassiveButton(active: active)),
               square8,
-              Expanded(child: PassivesCounterButton()),
+              Expanded(child: PassivesCounterButton(active: active)),
             ],
           );
         }
-        return const Column(
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            BuyPassiveButton(),
+            BuyPassiveButton(active: active),
             square8,
-            PassivesCounterButton(),
+            PassivesCounterButton(active: active),
           ],
         );
       },
@@ -110,27 +113,29 @@ class _Passives extends StatelessWidget {
 }
 
 class _PointsAndTotal extends StatelessWidget {
-  const _PointsAndTotal();
+  const _PointsAndTotal({required this.active});
+
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 480) {
-          return const Row(
+          return Row(
             children: [
-              Expanded(child: PointsButton()),
+              Expanded(child: PointsButton(active: active)),
               square8,
-              Expanded(child: TotalScoreButton()),
+              Expanded(child: TotalScoreButton(active: active)),
             ],
           );
         }
-        return const Column(
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            PointsButton(),
+            PointsButton(active: active),
             square8,
-            TotalScoreButton(),
+            TotalScoreButton(active: active),
           ],
         );
       },
